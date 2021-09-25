@@ -12,6 +12,7 @@
 //***************************************************************************************************************
 
 #include <Arduino.h>
+#include <LiquidCrystal.h>
 
 //***************************************************************************************************************
 // Definición de Pines
@@ -24,28 +25,29 @@
 #define Pot2 27 //Potenciómetro 2
 
 //Definición de pines de salidas LCD
-#define RS
-#define RW
-#define E
-#define D0
-#define D1
-#define D2
-#define D3
-#define D4
-#define D5
-#define D6
-#define D7
+#define RS 2
+#define E 16
+#define D4 21
+#define D5 3
+#define D6 1
+#define D7 22
+
+
 
 //***************************************************************************************************************
 // Prototipo de Funciones
 //***************************************************************************************************************
-void LCD (void);
+void LCD1 (void);
 void Antirrebote(void);
 
 //***************************************************************************************************************
 // Variabeles globales 
 //***************************************************************************************************************
 int contador = 0;
+LiquidCrystal LCD(RS, E, D4, D5, D6, D7);
+uint8_t decenas, unidades, decimal; 
+int adcRaw;
+float voltaje; 
 //***************************************************************************************************************
 // ISR (Interrupciones)
 //***************************************************************************************************************
@@ -59,7 +61,8 @@ void IRAM_ATTR BtnIncrementar(){
 
 
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(115200);
+  LCD.begin(16, 2);
 }
 
 
@@ -68,7 +71,22 @@ void setup() {
 //***************************************************************************************************************
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  voltaje = analogReadMilliVolts(Pot1) / 10.0;
+  int temp = voltaje;
+  decenas = temp / 100.0;
+  temp = temp - decenas *100.0;
+  unidades = temp / 10.0; 
+  temp = temp - unidades *10.0;
+  decimal = temp; 
+
+  LCD.clear();
+  LCD.print("Voltaje");
+  LCD.setCursor(2, 1);
+  LCD.print(decenas);
+  LCD.print(".");
+  LCD.print(unidades);
+  LCD.print(decimal);
+  delay(250);
 }
 //***************************************************************************************************************
 // Función Antirrebote
