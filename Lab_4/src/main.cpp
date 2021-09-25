@@ -147,11 +147,30 @@ void Antirrebote(){
 void Incremento (void){
 
   if (digitalRead(BtnIn) == 0 && contador == 0){ //BtbIn está presionado
-    while (BtnIn == 1)
-    {
-      LCD.setCursor(12, 1);
-      LCD.print("1");
-    }
+    LCD.setCursor(12, 1);
+    LCD.print("0");
+    contador = contador + 1;
+    delay(5000);
+  }
+  else if (digitalRead(BtnIn) == 0 && contador == 1){ //BtbIn está presionado
+    LCD.setCursor(12, 1);
+    LCD.print("1");
+    contador = contador + 1;
+    delay(5000);
+    
+  }
+  else if (digitalRead(BtnIn) == 0 && contador == 2){ //BtbIn está presionado
+    LCD.setCursor(12, 1);
+    LCD.print("2");
+    contador = contador + 1;
+    delay(5000);
+  }
+  else if (digitalRead(BtnIn) == 0 && contador == 3){ //BtbIn está presionado
+    LCD.setCursor(12, 1);
+    LCD.print("3");
+    contador = contador + 1;
+    delay(5000);
+    
   }
 
 }
