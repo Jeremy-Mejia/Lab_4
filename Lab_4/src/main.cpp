@@ -37,7 +37,8 @@
 //***************************************************************************************************************
 // Prototipo de Funciones
 //***************************************************************************************************************
-void LCD1 (void);
+void Incremento (void);
+void Decremento (void);
 void Antirrebote(void);
 
 //***************************************************************************************************************
@@ -46,8 +47,11 @@ void Antirrebote(void);
 int contador = 0;
 LiquidCrystal LCD(RS, E, D4, D5, D6, D7);
 uint8_t decenas, unidades, decimal; 
+uint8_t decenas1, unidades1, decimal1; 
 int adcRaw;
 float voltaje; 
+float voltaje1; 
+int num;
 //***************************************************************************************************************
 // ISR (Interrupciones)
 //***************************************************************************************************************
@@ -61,8 +65,13 @@ void IRAM_ATTR BtnIncrementar(){
 
 
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(115200);
   LCD.begin(16, 2);
+  void Incremento();
+
+  pinMode(BtnIn, PULLUP);
+  pinMode(BtnDe, PULLUP);
+  
 }
 
 
@@ -71,6 +80,7 @@ void setup() {
 //***************************************************************************************************************
 
 void loop() {
+
   voltaje = analogReadMilliVolts(Pot1) / 10.0;
   int temp = voltaje;
   decenas = temp / 100.0;
@@ -80,13 +90,38 @@ void loop() {
   decimal = temp; 
 
   LCD.clear();
-  LCD.print("Voltaje");
-  LCD.setCursor(2, 1);
+  LCD.print("Pot1: ");
+  LCD.print("Pot2: ");
+  LCD.print("CPU:");
+  LCD.setCursor(0, 1);
   LCD.print(decenas);
   LCD.print(".");
   LCD.print(unidades);
   LCD.print(decimal);
+  LCD.print("V");
   delay(250);
+  
+  voltaje1 = analogReadMilliVolts(Pot2) / 10.0;
+  int temp1 = voltaje1;
+  decenas1 = temp1 / 100.0;
+  temp1 = temp1- decenas1 *100.0;
+  unidades1 = temp1 / 10.0; 
+  temp1 = temp1 - unidades1 *10.0;
+  decimal1 = temp1; 
+  
+  LCD.setCursor(6, 1);
+  LCD.print(decenas1);
+  LCD.print(".");
+  LCD.print(unidades1);
+  LCD.print(decimal1);
+  LCD.print("V");
+  delay(250);
+
+  if (digitalRead(BtnIn) == 0){ //BtbIn está presionado
+    Incremento();
+  }
+
+  
 }
 //***************************************************************************************************************
 // Función Antirrebote
@@ -101,6 +136,22 @@ void Antirrebote(){
   if (contador == 1 && BtnDe == 0){
     delay(150);
     contador = 0; 
+  }
+
+}
+
+//***************************************************************************************************************
+// Función Contador
+//***************************************************************************************************************
+
+void Incremento (void){
+
+  if (digitalRead(BtnIn) == 0 && contador == 0){ //BtbIn está presionado
+    while (BtnIn == 1)
+    {
+      LCD.setCursor(12, 1);
+      LCD.print("1");
+    }
   }
 
 }
