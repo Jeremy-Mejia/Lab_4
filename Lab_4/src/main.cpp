@@ -55,10 +55,13 @@ int num;
 //***************************************************************************************************************
 // ISR (Interrupciones)
 //***************************************************************************************************************
-void IRAM_ATTR BtnIncrementar(){
+void IRAM_ATTR ContadoR(){
   contador = 1;
 }
 
+void IRAM_ATTR ContadoR2(){
+  contador = 1;
+}
 //***************************************************************************************************************
 // Configuración
 //***************************************************************************************************************
@@ -67,13 +70,17 @@ void IRAM_ATTR BtnIncrementar(){
 void setup() {
   //Serial.begin(115200);
   LCD.begin(16, 2);
+  void Antirrebote();
   void Incremento();
+  void Decremento ();
 
   pinMode(BtnIn, PULLUP);
   pinMode(BtnDe, PULLUP);
+
+  //attachInterrupt(BtnIn, ContadoR, RISING);
+  //attachInterrupt(BtnDe, ContadoR2, RISING);
   
 }
-
 
 //***************************************************************************************************************
 // Loop Principal
@@ -121,6 +128,10 @@ void loop() {
     Incremento();
   }
 
+  if (digitalRead(BtnDe) == 0){
+    Decremento();
+  }
+
   
 }
 //***************************************************************************************************************
@@ -141,36 +152,55 @@ void Antirrebote(){
 }
 
 //***************************************************************************************************************
-// Función Contador
+// Función Contador Incremento 
 //***************************************************************************************************************
 
 void Incremento (void){
 
   if (digitalRead(BtnIn) == 0 && contador == 0){ //BtbIn está presionado
     LCD.setCursor(12, 1);
-    LCD.print("0");
+    LCD.print(contador);
     contador = contador + 1;
-    delay(5000);
+    delay(500);
   }
   else if (digitalRead(BtnIn) == 0 && contador == 1){ //BtbIn está presionado
     LCD.setCursor(12, 1);
-    LCD.print("1");
+    LCD.print(contador);
     contador = contador + 1;
-    delay(5000);
-    
+    delay(500);
   }
-  else if (digitalRead(BtnIn) == 0 && contador == 2){ //BtbIn está presionado
+  else if (digitalRead(BtnIn) == 0 && contador == 255){ //BtbIn está presionado
     LCD.setCursor(12, 1);
-    LCD.print("2");
-    contador = contador + 1;
-    delay(5000);
+    LCD.print(contador);
+    contador  = contador; 
+    delay(500);
   }
-  else if (digitalRead(BtnIn) == 0 && contador == 3){ //BtbIn está presionado
+  else if (digitalRead(BtnIn) == 0 && contador++){ //BtbIn está presionado
     LCD.setCursor(12, 1);
-    LCD.print("3");
-    contador = contador + 1;
-    delay(5000);
-    
+    LCD.print(contador - 1);
+    delay(500);
   }
 
+}
+//***************************************************************************************************************
+// Función Contador Decremento 
+//***************************************************************************************************************
+
+void Decremento (void){
+
+  if (digitalRead(BtnDe) == 0 && contador == 0){ //BtbIn está presionado
+    LCD.setCursor(12, 1);
+    LCD.print(contador);
+    delay(500);
+  }
+  else if (digitalRead(BtnDe) == 0 && contador == 1){ //BtbIn está presionado
+    LCD.setCursor(12, 1);
+    LCD.print(contador - 1);
+    delay(500);
+  }
+  else if (digitalRead(BtnDe) == 0 && contador--){ //BtbIn está presionado
+    LCD.setCursor(12, 1);
+    LCD.print(contador - 1);
+    delay(500);
+  }
 }
